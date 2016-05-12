@@ -23,12 +23,13 @@
 #-             http://socware.net                                            */
 #-                                                                           */
 #-****************************************************************************/
-eval $@
 PREFIX=${PREFIX:-../prefix/arm-none-eabi}
 
 D=$0
 D=${D%/*}
 source $D/bld-lib.sh
+
+eval $@
 repo=${repo:-https://github.com/ibanezchen}
 
 out_git hyperCOS $repo/hyperCOS-evaluate.git eva3

@@ -100,11 +100,11 @@ function out_git
 	fi
 
 	export wdir=`pwd` 
-	printf "  [%15s]->[%10s] [%6s]\n" ${url} ${name} ${tag}
+	printf "[%15s]->[%10s] [%6s]\n" ${url} ${name} ${tag}
 	cd ../
 
 	if ! [ -d $name ]; then
-		git clone $url $tag
+		git clone $url $name
 	fi
 	cd $name
 	action $name "git fetch origin" || exit 1
@@ -129,12 +129,12 @@ function add_mod
 	cd ../
 	cd ${name} || exit 1
 	if [ "${NO_CLN}" != "1" ]; then
-		printf "\t [%15s]\t\t%s \n" ${name} "external.build"
+		printf "[%15s]\t%s \n" ${name} "external.build"
 		action $name "make clean"
 	fi
-	printf "\t [%15s]\t\t%s \n" ${name} "external.pack"
+	printf "[%15s]\t%s\n" ${name} "external.pack"
 
-	action $name "make" "$@" || exit 1
+	action $name "make all" "$@" || exit 1
 	action $name "make install " "$@"
 	cd ${wdir}
 }
@@ -157,7 +157,7 @@ function add_cmd
 	wdir=`pwd` 
 	cd ../
 	cd ${name} || exit 1
-	printf "\t [%15s]\t\t%s \n" ${name} "$target"
+	printf "[%15s]\t%s \n" ${name} "$target"
 	action $name "$target" || exit 1
 	cd ${wdir}
 }
