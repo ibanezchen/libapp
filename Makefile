@@ -22,12 +22,12 @@ LDFLAGS:=$(MOPTS) -g -nostartfiles -nodefaultlibs \
 	-Wl,--start-group -lhcos -lc -lgcc $(SOC_LIB) \
 	-lmbedcrypto -lmbedtls -lmbedx509 \
 	-ljerrycore -ljerrylibm -laws-iot libapp.a \
-	-Wl,--end-group
+	-Wl,--end-group -Wl,--gc-sections
 
 MSCRIPT:=$(PREFIX)/share/mod.ld
 LIB    :=lib$(NAME).a
 
-ALL    := hello.elf.bin hello-javascript.elf.bin aws-shadow.elf.bin
+ALL    := hello.elf.bin hello-javascript.elf.bin aws-sub-pub.elf.bin
 CLEAN  :=
 CPU    :=arm
 
