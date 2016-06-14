@@ -22,30 +22,24 @@
 /*-             http://socware.net                                            */
 /*-                                                                           */
 /*-****************************************************************************/
-#include <hcos/core.h>
-#include <hcos/task.h>
-#include <hcos/soc.h>
-#include <hcos/mod.h>
-#include <string.h>
-#include <stdio.h>
+#ifdef _EXE_
 
-#if _EXE_
+#include "main.h"
+#include "plt.h"
 
-static void hellof(void *priv)
-{
-	unsigned ts = (unsigned)priv;
-	unsigned i = 0;
-	while (1) {
-		printf("Hello %6d\r\n", i++);
-		task_sleep(ts);
-	}
-}
+SCANF_FLOAT;
 
-int main(void)
+PRINTF_FLOAT;
+
+int iperf_main(int argc, char **argv);
+
+///> go 0 -c <ip> -p 2501 -l 8k
+int main(int argc, char **argv)
 {
 	core_init();
-	task_new("hello-1", hellof, 56, 1024, -1, (void *)50);
-	task_new("hello-2", hellof, 10, 1024, -1, (void *)100);
+	main_new(argc, argv,
+		 WIFI_WPA_PSK_WPA2_PSK, xstr(WIFI_SSID), xstr(WIFI_PASSWD),
+		 0, 0, iperf_main);
 	core_start();
 	return 0;
 }

@@ -53,3 +53,9 @@ add_mod mbedtls
 out_git aws-iot-device-sdk-embedded-C $repo/aws-iot-device-sdk-embedded-C.git v2.0.0-hyperc
 add_cmd aws-iot-device-sdk-embedded-C "make -f platform/hyperc/Makefile"
 add_cmd aws-iot-device-sdk-embedded-C "make -f platform/hyperc/Makefile install"
+
+out_git iperf $repo/iperf.git hyperc
+add_cmd iperf "make -f Makefile.hcos"
+add_cmd iperf "make -f Makefile.hcos"
+
+add_mod libapp
