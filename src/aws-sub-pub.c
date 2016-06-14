@@ -242,7 +242,7 @@ void main_thread(void* p)
 	char* pass = xstr(WIFI_PASSWD);
 	printf("wifi=%s %s\r\n", ssid, pass);
 	plt_init();
-	net_init();
+	net_init(0);
 	wifi_init(WIFI_WPA_PSK_WPA2_PSK, ssid, pass);
 	ip_dhcp();
 	mbedtls_platform_set_calloc_free(calloc, free);
