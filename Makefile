@@ -21,7 +21,7 @@ LDFLAGS:=$(MOPTS) -g -nostartfiles -nodefaultlibs \
 	-L$(PREFIX)/lib -L$(PREFIX)/bin/$(SOC) -T$(LSCRIPT)	\
 	-Wl,--start-group -lhcos -lc -lgcc $(SOC_LIB) \
 	-lmbedcrypto -lmbedtls -lmbedx509 \
-	-ljerrycore -ljerrylibm -laws-iot libapp.a \
+	-ljerrycore -ljerrylibm -laws-iot libapp.a -liperf3 \
 	-Wl,--end-group -Wl,--gc-sections
 
 MSCRIPT:=$(PREFIX)/share/mod.ld

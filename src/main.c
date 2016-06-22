@@ -22,31 +22,59 @@
 /*-             http://socware.net                                            */
 /*-                                                                           */
 /*-****************************************************************************/
-#include <hcos/core.h>
+#define _DBG 1
+#define HC	1
+#include <hcos/dbg.h>
 #include <hcos/task.h>
 #include <hcos/soc.h>
-#include <hcos/mod.h>
+#include <lwip/netif.h>
+#include <lwip/tcpip.h>
+#include <lwip/sockets.h>
+#include <lwip/netdb.h>
+
+#include "_soc.h"
+#include "term.h"
+#include "plt.h"
+#include "plt-wifi.h"
+#include "main.h"
+
 #include <string.h>
-#include <stdio.h>
 
-#if _EXE_
-
-static void hellof(void *priv)
+static void main_thread(void *p)
 {
-	unsigned ts = (unsigned)priv;
-	unsigned i = 0;
-	while (1) {
-		printf("Hello %6d\r\n", i++);
-		task_sleep(ts);
-	}
+	main_t *m = (main_t *) p;
+	int i;
+	int argc = m->argc;
+	char **argv = m->argv;
+	char *ssid = m->ssid;
+	char *pass = m->passwd;
+	plt_init();
+	net_init(m->mac);
+	dbg("wifi=%s %s\r\n", ssid, pass);
+	wifi_init(m->auth, ssid, pass);
+	if (!m->netcfg)
+		ip_dhcp();
+	else;			//FIXME:
+	for (i = 0; i < argc; i++)
+		dbg("argv[%d] = %s\r\n", i, argv[i]);
+	i = m->mf(argc, argv);
+	dbg("exit %d\n", i);
 }
 
-int main(void)
+main_t *main_new(int argc, char **argv,
+		 wifi_auth_t auth,
+		 char *wifi_ssid,
+		 char *wifi_passwd, char **mac, char **netcfg, main_f mf)
 {
-	core_init();
-	task_new("hello-1", hellof, 56, 1024, -1, (void *)50);
-	task_new("hello-2", hellof, 10, 1024, -1, (void *)100);
-	core_start();
-	return 0;
+	main_t *m = core_alloc(sizeof(main_t), 2);
+	m->argc = argc;
+	m->argv = argv;
+	m->auth = auth;
+	m->ssid = wifi_ssid;
+	m->passwd = wifi_passwd;
+	m->mac = mac;
+	m->netcfg = netcfg;
+	m->mf = mf;
+	task_new("main", main_thread, 8, 4096, -1, m);
+	return m;
 }
-#endif

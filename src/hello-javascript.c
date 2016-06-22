@@ -7,8 +7,9 @@ jerry_completion_code_t code;
 
 void js(void *priv)
 {
-	char script [] = "print ('hello java script');";
-	code = jerry_run_simple((void*)script, strlen(script), JERRY_FLAG_EMPTY);
+	char script[] = "print ('hello java script');";
+	code =
+	    jerry_run_simple((void *)script, strlen(script), JERRY_FLAG_EMPTY);
 }
 
 #if _EXE_
