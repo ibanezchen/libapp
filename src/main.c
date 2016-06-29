@@ -54,7 +54,8 @@ static void main_thread(void *p)
 	wifi_init(m->auth, ssid, pass);
 	if (!m->netcfg)
 		ip_dhcp();
-	else;			//FIXME:
+	else
+		ip_static(m->netcfg[0], m->netcfg[1], m->netcfg[1]) ;
 	for (i = 0; i < argc; i++)
 		dbg("argv[%d] = %s\r\n", i, argv[i]);
 	i = m->mf(argc, argv);

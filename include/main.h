@@ -9,6 +9,8 @@
 
 typedef int (*main_f) (int argc, char **argv);
 
+/// \param netcfg 0 for dhcp, or netcfg[0]=ip, netcfg[1]=mask, netcfg[2]=gateway,
+///	all in ascii.
 typedef struct {
 	int argc;
 	char **argv;
