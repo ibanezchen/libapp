@@ -22,63 +22,34 @@
 /*-             http://socware.net                                            */
 /*-                                                                           */
 /*-****************************************************************************/
-#define _DBG 1
-#define HC	1
-#include <hcos/dbg.h>
+#ifdef _EXE_
+
+#include <time.h>
+#include <stdio.h>
 #include <hcos/task.h>
-#include <hcos/soc.h>
-#include <lwip/netif.h>
-#include <lwip/tcpip.h>
-#include <lwip/sockets.h>
-#include <lwip/netdb.h>
-
-#include "_soc.h"
-#include "term.h"
 #include "plt.h"
-#include "plt-wifi.h"
+
+static int walltime(int argc, char **argv)
+{
+	time_t cur;
+	plt_sntp("pool.ntp.org");
+	sntp_wait();
+	while(1){
+		time(&cur);
+		printf("%s\n", ctime(&cur));
+		task_sleep(PLT_HZ);
+	}
+	return 0;
+}
+
 #include "main.h"
-
-#include <string.h>
-
-static void main_thread(void *p)
+int main(int argc, char **argv)
 {
-	main_t *m = (main_t *) p;
-	int i;
-	int argc = m->argc;
-	char **argv = m->argv;
-	char *ssid = m->ssid;
-	char *pass = m->passwd;
-	plt_init();
-	if(m->mac)
-		net_init(m->mac[0], m->mac[1], 0);
-	else
-		net_init(0);
-	dbg("wifi=%s %s\r\n", ssid, pass);
-	wifi_init(m->auth, ssid, pass);
-	if (!m->netcfg)
-		ip_dhcp();
-	else
-		ip_static(m->netcfg[0], m->netcfg[1], m->netcfg[1], m->netcfg[2]) ;
-	for (i = 0; i < argc; i++)
-		dbg("argv[%d] = %s\r\n", i, argv[i]);
-	i = m->mf(argc, argv);
-	dbg("exit %d\n", i);
+	core_init();
+	main_new(argc, argv,
+		 WIFI_WPA_PSK_WPA2_PSK, xstr(WIFI_SSID), xstr(WIFI_PASSWD),
+		 0, 0, walltime);
+	core_start();
+	return 0;
 }
-
-main_t *main_new(int argc, char **argv,
-		 wifi_auth_t auth,
-		 char *wifi_ssid,
-		 char *wifi_passwd, char **mac, char **netcfg, main_f mf)
-{
-	main_t *m = core_alloc(sizeof(main_t), 2);
-	m->argc = argc;
-	m->argv = argv;
-	m->auth = auth;
-	m->ssid = wifi_ssid;
-	m->passwd = wifi_passwd;
-	m->mac = mac;
-	m->netcfg = netcfg;
-	m->mf = mf;
-	task_new("main", main_thread, 8, 4096, -1, m);
-	return m;
-}
+#endif
