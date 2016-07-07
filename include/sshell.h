@@ -22,64 +22,73 @@
 /*-             http://socware.net                                            */
 /*-                                                                           */
 /*-****************************************************************************/
-#define _DBG 1
-#define HC	1
-#include <hcos/dbg.h>
-#include <hcos/task.h>
-#include <hcos/soc.h>
-#include <lwip/netif.h>
-#include <lwip/tcpip.h>
-#include <lwip/sockets.h>
-#include <lwip/netdb.h>
-
-#include "_soc.h"
-#include "term.h"
-#include "plt.h"
-#include "plt-wifi.h"
-#include "main.h"
+#ifndef SSHELL0707
+#define SSHELL0707
 
 #include <string.h>
 
-static void main_thread(void *p)
+#ifndef SH_LINE
+#define SH_LINE	128
+#endif
+
+#ifndef SH_HISTORY_N
+#define SH_HISTORY_N	6
+#endif
+
+typedef struct {
+	char l[SH_LINE];
+} his_t;
+
+typedef int (*sh_read_t) (void *priv);
+
+typedef void (*sh_write_t) (void *priv, char *b, int n);
+
+typedef struct {
+	his_t his[SH_HISTORY_N];
+	int his_next;
+	char line[SH_LINE];
+	int pos;
+	sh_read_t r;
+	sh_write_t w;
+	ll_t cmd;
+	void *priv;
+} sshell_t;
+
+static inline sshell_t *sh_init(sshell_t * o, sh_read_t r, sh_write_t w,
+				void *priv)
 {
-	main_t *m = (main_t *) p;
-	int i;
-	int argc = m->argc;
-	char **argv = m->argv;
-	char *ssid = m->ssid;
-	char *pass = m->passwd;
-	plt_init();
-	if (m->mac)
-		net_init(m->mac[0], m->mac[1], 0);
-	else
-		net_init(0);
-	dbg("wifi=%s %s\r\n", ssid, pass);
-	wifi_init(m->auth, ssid, pass);
-	if (!m->netcfg)
-		ip_dhcp();
-	else
-		ip_static(m->netcfg[0], m->netcfg[1], m->netcfg[1],
-			  m->netcfg[2]);
-	for (i = 0; i < argc; i++)
-		dbg("argv[%d] = %s\r\n", i, argv[i]);
-	i = m->mf(argc, argv);
-	dbg("exit %d\n", i);
+	memset(o, 0, sizeof(sshell_t));
+	o->r = r;
+	o->w = w;
+	ll_init(&o->cmd);
+	o->priv = priv;
+	return o;
 }
 
-main_t *main_new(int argc, char **argv,
-		 wifi_auth_t auth,
-		 char *wifi_ssid,
-		 char *wifi_passwd, char **mac, char **netcfg, main_f mf)
+int sh_uartr(void *priv);
+
+void sh_uartw(void *priv, char *b, int n);
+
+static inline void sh_set(sshell_t * o, ll_t * cmd)
 {
-	main_t *m = core_alloc(sizeof(main_t), 2);
-	m->argc = argc;
-	m->argv = argv;
-	m->auth = auth;
-	m->ssid = wifi_ssid;
-	m->passwd = wifi_passwd;
-	m->mac = mac;
-	m->netcfg = netcfg;
-	m->mf = mf;
-	task_new("main", main_thread, 8, 4096, -1, m);
-	return m;
+	memcpy(&o->cmd, cmd, sizeof(ll_t));
 }
+
+char *sh_gets(sshell_t * o);
+
+int sh_exe(sshell_t * o, char *cmd);
+
+typedef struct {
+	char *cmd;
+	int (*f) (char *cmd);
+	char *desc;
+	lle_t ll;
+} cmd_t;
+
+static inline void sh_cmd_add(sshell_t * sh, cmd_t * c)
+{
+	lle_init(&c->ll);
+	ll_addh(&sh->cmd, &c->ll);
+}
+
+#endif
