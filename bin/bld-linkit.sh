@@ -55,7 +55,10 @@ add_cmd aws-iot-device-sdk-embedded-C "make -f platform/hyperc/Makefile"
 add_cmd aws-iot-device-sdk-embedded-C "make -f platform/hyperc/Makefile install"
 
 out_git iperf $repo/iperf.git hyperc
+add_cmd iperf "echo > src/iperf_config.h"
+add_cmd iperf "echo > src/version.h"
 add_cmd iperf "make -f Makefile.hcos"
 add_cmd iperf "make -f Makefile.hcos"
 
+add_cmd libapp "make src/aws-key.c"
 add_mod libapp
