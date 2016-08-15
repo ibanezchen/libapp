@@ -69,11 +69,6 @@ int sh_uartr(void *priv);
 
 void sh_uartw(void *priv, char *b, int n);
 
-static inline void sh_set(sshell_t * o, ll_t * cmd)
-{
-	memcpy(&o->cmd, cmd, sizeof(ll_t));
-}
-
 char *sh_gets(sshell_t * o);
 
 int sh_exe(sshell_t * o, char *cmd);
