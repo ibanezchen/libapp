@@ -8,15 +8,15 @@ jerry_completion_code_t code;
 
 void jshell(void *priv)
 {
-	char* script = "print ('hello java script');";
+	char *script = "print ('hello java script');";
 	sshell_t s;
 	sh_init(&s, sh_uartr, sh_uartw, &u0);
-	do{
-		if((code = jerry_run_simple((void *)script, 
-		    	    strlen(script), JERRY_FLAG_EMPTY)))
+	do {
+		if ((code = jerry_run_simple((void *)script,
+					     strlen(script), JERRY_FLAG_EMPTY)))
 			printf("err code %d\n", code);
 		script = sh_gets(&s);
-	}while(1);
+	} while (1);
 }
 
 #if _EXE_

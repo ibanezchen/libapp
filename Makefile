@@ -14,14 +14,14 @@ MOPTS  :=$(COPTS) \
 	-ffunction-sections -fdata-sections -fshort-enums
 CONFIG = -DWIFI_SSID=$(WIFI_SSID) -DWIFI_PASSWD=$(WIFI_PASSWD) \
 	-DAWS_IOT_AP=$(AWS_IOT_AP)
-ASFLAGS:=$(MOPTS) $(CONFIG) -O1 -g -Wall -Werror -D __ASSEMBLY__
-CFLAGS :=$(MOPTS) $(CONFIG) -O1 -g -Wall -Werror
+ASFLAGS:=$(MOPTS) $(CONFIG) -O2 -g -Wall -Werror -D __ASSEMBLY__
+CFLAGS :=$(MOPTS) $(CONFIG) -O2 -g -Wall -Werror
 LSCRIPT?=rom.ld
 LDFLAGS:=$(MOPTS) -g -nostartfiles -nodefaultlibs \
 	-L$(PREFIX)/lib -L$(PREFIX)/bin/$(SOC) -T$(LSCRIPT)	\
 	-Wl,--start-group -lhcos -lc -lgcc $(SOC_LIB) \
 	-lmbedcrypto -lmbedtls -lmbedx509 \
-	-ljerrycore -ljerrylibm -laws-iot libapp.a -liperf3 \
+	-ljerrycore -ljerrylibm -laws-iot libapp.a -liperf \
 	-Wl,--end-group -Wl,--gc-sections
 
 MSCRIPT:=$(PREFIX)/share/mod.ld
