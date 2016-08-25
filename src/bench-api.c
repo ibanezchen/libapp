@@ -17,8 +17,7 @@
 /*-                                                                           */
 /*-  SOCWare, Inc. reserves the right to modify this software                 */
 /*-  without notice.                                                          */
-/*-
-*/
+/*-                                                                           */
 /*-             socware.help@gmail.com                                        */
 /*-             http://socware.net                                            */
 /*-                                                                           */
@@ -58,6 +57,10 @@ static double strip(double off)
 {
 	return off - (off * inter) / CNTB;
 }
+
+int bench_mm(void);
+
+int bench_mm2(void);
 
 static void t1(void *priv)
 {
@@ -130,6 +133,16 @@ static void t1(void *priv)
 	printf("%8dx%12s = %f\n", CNTB, "mqsend", mqsend / tmr_hz);
 	printf("%8dx%12s = %f\n", CNTB, "mqget", mqget / tmr_hz);
 
+	t = tmr_ticks;
+	i = bench_mm();
+	t1 = tmr_ticks;
+	printf("%8dx%12s = %f\n", i, "malloc,free", strip(t1 - t) / tmr_hz);
+
+	t = tmr_ticks;
+	i = bench_mm2();
+	t1 = tmr_ticks;
+	printf("%8dx%12s = %f\n", i, "malloc,free2", strip(t1 - t) / tmr_hz);
+	printf("ok\n");
 }
 
 static void t2(void *priv)
