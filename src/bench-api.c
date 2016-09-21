@@ -58,13 +58,10 @@ static double strip(double off)
 	return off - (off * inter) / CNTB;
 }
 
-<<<<<<< HEAD
-=======
 int bench_mm(void);
 
 int bench_mm2(void);
 
->>>>>>> 36ec004... Add API benchmark
 static void t1(void *priv)
 {
 	int i;
@@ -136,16 +133,18 @@ static void t1(void *priv)
 	printf("%8dx%12s = %f\n", CNTB, "mqsend", mqsend / tmr_hz);
 	printf("%8dx%12s = %f\n", CNTB, "mqget", mqget / tmr_hz);
 
-	t = tmr_ticks;
+	t = soc_rtcs();
 	i = bench_mm();
-	t1 = tmr_ticks;
-	printf("%8dx%12s = %f\n", i, "malloc,free", strip(t1 - t) / tmr_hz);
+	t1 = soc_rtcs();
+	printf("%8dx%12s = %f\n", i, "malloc,free",
+		strip(t1 - t) / (tmr_hz<<tmr_rtcs2tick));
 
 #ifdef CFG_BUDDY
-	t = tmr_ticks;
+	t = soc_rtcs();
 	i = bench_mm2();
-	t1 = tmr_ticks;
-	printf("%8dx%12s = %f\n", i, "malloc,free2", strip(t1 - t) / tmr_hz);
+	t1= soc_rtcs();
+	printf("%8dx%12s = %f\n", i, "malloc,free2",
+		strip(t1 - t) / (tmr_hz<<tmr_rtcs2tick));
 #endif
 	printf("ok\n");
 }
