@@ -65,8 +65,7 @@ int bench_mm2(void);
 static void t1(void *priv)
 {
 	int i;
-	unsigned t, t1;
-
+	unsigned t, t1, freq;
 	// interrupt
 	cnt = 0;
 	t = tmr_ticks;
@@ -133,18 +132,21 @@ static void t1(void *priv)
 	printf("%8dx%12s = %f\n", CNTB, "mqsend", mqsend / tmr_hz);
 	printf("%8dx%12s = %f\n", CNTB, "mqget", mqget / tmr_hz);
 
-	t = soc_rtcs();
+	freq = soc_hrt_init();
+
+	printf("hrt ticking on %d\n", freq);
+	t = soc_hrt();
 	i = bench_mm();
-	t1 = soc_rtcs();
-	printf("%8dx%12s = %f\n", i, "malloc,free",
-		strip(t1 - t) / (tmr_hz<<tmr_rtcs2tick));
+	t1 = soc_hrt();
+	printf("%8dx%12s = %f %d %d\n", i, "malloc,free",
+	       (double)(t1 - t) / freq, t, t1);
 
 #ifdef CFG_BUDDY
-	t = soc_rtcs();
+	t = soc_hrt();
 	i = bench_mm2();
-	t1= soc_rtcs();
-	printf("%8dx%12s = %f\n", i, "malloc,free2",
-		strip(t1 - t) / (tmr_hz<<tmr_rtcs2tick));
+	t1 = soc_hrt();
+	printf("%8dx%12s = %f %d %d\n", i, "malloc,free2",
+	       (double)(t1 - t) / freq, t, t1);
 #endif
 	printf("ok\n");
 }
