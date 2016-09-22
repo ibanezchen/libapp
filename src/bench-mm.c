@@ -56,121 +56,45 @@ void *a0010d330;
 void *a0010d408;
 void *a0010d478;
 void *a0010d738;
-void *a0010dd40;
-void *a0010d4a8;
 void *a0010d4a8;
 void *a0010e0f8;
 void *a0010e108;
-void *a0010e118;
-void *a0010e148;
-void *a0010e148;
 void *a0010d998;
 void *a0010d9c8;
 void *a0010d890;
-void *a0010dd40;
-void *a0010da50;
-void *a0010d748;
-void *a0010e118;
-void *a0010e0a8;
-void *a0010da28;
-void *a0010e118;
 void *a0010e150;
 void *a0010e150;
-void *a0010da28;
-void *a0010e118;
-void *a0010da28;
-void *a0010e148;
-void *a0010e278;
-void *a0010e368;
 void *a0010e4a8;
-void *a0010da38;
-void *a0010da28;
 void *a0010da28;
 void *a0010e0a8;
 void *a0010e148;
 void *a0010dd40;
-void *a0010e168;
-void *a0010dd40;
-void *a0010e168;
-void *a0010dd40;
-void *a0010e168;
-void *a0010dd40;
-void *a0010e168;
-void *a0010dd40;
-void *a0010e168;
-void *a0010dd40;
-void *a0010e168;
-void *a0010e168;
 void *a0010e198;
-void *a0010e168;
 void *a0010e198;
-void *a0010e118;
-void *a0010ddf8;
-void *a0010e118;
 void *a0010e190;
-void *a0010e190;
-void *a0010dd40;
-void *a0010e190;
-void *a0010dd40;
-void *a0010e190;
-void *a0010e168;
-void *a0010e118;
-void *a0010e168;
-void *a0010e168;
-void *a0010dd40;
 void *a0010e1f0;
 void *a0010dd40;
 void *a0010e1f0;
 void *a0010e1f0;
-void *a0010e278;
-void *a0010e278;
 void *a0010e1f0;
-void *a0010e168;
-void *a0010e168;
-void *a0010e168;
-void *a0010e168;
 void *a0010e228;
-void *a0010e278;
-void *a0010e278;
 void *a0010e228;
 void *a0010e228;
 void *a0010e298;
 void *a0010e298;
 void *a0010e228;
 void *a0010e228;
-void *a0010e278;
+void *a0010e228;
+void *a0010e228;
+void *a0010e228;
+void *a0010e228;
 void *a0010e228;
 void *a0010e278;
-void *a0010e228;
-void *a0010e278;
-void *a0010e228;
-void *a0010e278;
-void *a0010e228;
-void *a0010e278;
-void *a0010e228;
-void *a0010e278;
-void *a0010e118;
-void *a0010e118;
-void *a0010e118;
-void *a0010e168;
-void *a0010e168;
 void *a0010e198;
-void *a0010e168;
-void *a0010e118;
-void *a0010e118;
 void *a0010e198;
-void *a0010e168;
 void *a0010e1d8;
 void *a0010e168;
 void *a0010e1d8;
-void *a0010e118;
-void *a0010ddf8;
-void *a0010e118;
-void *a0010e118;
-void *a0010e118;
-void *a0010e118;
-void *a0010e0d0;
-void *a0010e118;
 void *a0010e118;
 void *a0010ddf8;
 void *a0010e118;
@@ -192,11 +116,17 @@ static inline void *__malloc(unsigned sz, int line)
 
 #define _malloc(_sz)	__malloc(_sz, __LINE__)
 
-static inline void _free(void *p)
+static inline void __free(void *p)
 {
 	cnt++;
 	heap_free(&plt_tcm, p);
 }
+
+#define _free(p)	\
+	do{		\
+		__free(p);	\
+		p = 0;		\
+	}while(0)
 
 int bench_mm(void)
 {
@@ -219,7 +149,6 @@ int bench_mm(void)
 	a00105958 = _malloc(68);
 	a001059a8 = _malloc(4103);
 	a001069b8 = _malloc(68);
-	a00106a08 = _malloc(24583);
 	a0010ca18 = _malloc(68);
 	a0010ca68 = _malloc(2055);
 	a0010d278 = _malloc(12);
@@ -234,34 +163,20 @@ int bench_mm(void)
 	a0010d478 = _malloc(40);
 	a0010d738 = _malloc(7);
 	a0010dd40 = _malloc(7);
-	_free(a0010d4a8);
 	a0010d4a8 = _malloc(8);
 	a0010e0f8 = _malloc(8);
 	a0010e108 = _malloc(8);
 	a0010e118 = _malloc(40);
 	a0010e148 = _malloc(40);
 	_free(a0010e148);
-	_free(a0010d998);
-	_free(a0010d9c8);
-	_free(a0010d890);
 	_free(a0010dd40);
-	_free(a0010da50);
-	_free(a0010d748);
 	_free(a0010e118);
-	_free(a0010e0a8);
 	a0010da28 = _malloc(46);
 	a0010e118 = _malloc(47);
 	a0010e150 = _malloc(40);
 	_free(a0010e150);
 	_free(a0010da28);
 	a0010e118 = _malloc(40);
-	_free(a0010da28);
-	_free(a0010e148);
-	_free(a0010e278);
-	_free(a0010e368);
-	_free(a0010e4a8);
-	_free(a0010da38);
-	_free(a0010da28);
 	a0010da28 = _malloc(28);
 	a0010e0a8 = _malloc(26);
 	a0010e148 = _malloc(22);
@@ -282,7 +197,6 @@ int bench_mm(void)
 	_free(a0010e168);
 	_free(a0010e198);
 	_free(a0010e118);
-	_free(a0010ddf8);
 	a0010e118 = _malloc(40);
 	a0010e190 = _malloc(40);
 	_free(a0010e190);
@@ -290,9 +204,7 @@ int bench_mm(void)
 	a0010e190 = _malloc(40);
 	_free(a0010dd40);
 	_free(a0010e190);
-	_free(a0010e168);
 	_free(a0010e118);
-	_free(a0010e168);
 	a0010e168 = _malloc(121);
 	a0010dd40 = _malloc(2);
 	a0010e1f0 = _malloc(40);
@@ -326,14 +238,12 @@ int bench_mm(void)
 	a0010e278 = _malloc(40);
 	_free(a0010e228);
 	_free(a0010e278);
-	_free(a0010e118);
 	a0010e118 = _malloc(40);
 	_free(a0010e118);
 	_free(a0010e168);
 	a0010e168 = _malloc(40);
 	a0010e198 = _malloc(40);
 	_free(a0010e168);
-	_free(a0010e118);
 	a0010e118 = _malloc(40);
 	_free(a0010e198);
 	a0010e168 = _malloc(100);
@@ -341,15 +251,12 @@ int bench_mm(void)
 	_free(a0010e168);
 	_free(a0010e1d8);
 	_free(a0010e118);
-	_free(a0010ddf8);
 	a0010e118 = _malloc(40);
 	_free(a0010e118);
 	a0010e118 = _malloc(40);
 	_free(a0010e118);
-	_free(a0010e0d0);
 	a0010e118 = _malloc(40);
 	_free(a0010e118);
-	_free(a0010ddf8);
 	a0010e118 = _malloc(40);
 	return cnt;
 }
@@ -357,34 +264,93 @@ int bench_mm(void)
 #ifdef CFG_BUDDY
 
 #include <hcos/bm.h>
+#include <hcos/bmp.h>
 
 static bm_t *bm;
 
-static inline void *__malloc2(unsigned sz, int line)
+static bmp_t *b16, *b52, *b72;
+
+static void *__malloc2(unsigned sz, int line)
 {
-	void *p = _bm_alloc(sz, bm);
+	void *p = 0;
+	cnt++;
+	if (sz <= (b16->isz - sizeof(unsigned))) {
+		if ((p = bmp_get(b16, WAIT_NO))) {
+			*(bmp_t **) p = b16;
+			return (p + 4);
+		}
+	}
+
+	if (sz > 16 && sz <= 40) {
+		if ((p = bmp_get(b52, WAIT_NO))) {
+			*(bmp_t **) p = b52;
+			return (p + 4);
+		}
+	}
+
+	if (sz > 40 && sz <= 68) {
+		if ((p = bmp_get(b72, WAIT_NO))) {
+			*(bmp_t **) p = b72;
+			return (p + 4);
+		}
+	}
+	p = _bm_alloc(sz, bm);
 	if (!p) {
 		printf("line: %d\n", line);
 		while (1) ;
 	}
-	cnt++;
 	return p;
 }
 
 #define _malloc2(_sz)	__malloc2(_sz, __LINE__)
 
-static inline void _free2(void *p)
+static void __free2(void *p)
 {
+	void **_p = (void **)(p - 4);
 	cnt++;
-	_bm_free(bm, p);
+	if (*_p == (void *)b16) {
+		bmp_put(b16, _p);
+	} else if (*_p == (void *)b52) {
+		bmp_put(b52, _p);
+	} else if (*_p == (void *)b72) {
+		bmp_put(b72, _p);
+	} else {
+		_bm_free(bm, p);
+	}
 }
+
+#define _free2(p)	\
+	do{		\
+		__free2(p);	\
+		p = 0;		\
+	}while(0)
 
 int bench_mm2(void)
 {
+	void *buf;
+	unsigned s;
 	unsigned bo = 5;
 	unsigned mo = 16;
 	bm = _alloc(_bm_sz(bo, mo));
 	_bm_init(bm, (void *)BASE_TCM, bo, mo);
+
+	s = bmp_sz(16) + bmp_buf_sz(16, 16);
+	buf = _alloc(s);
+	b16 = (bmp_t *) buf;
+	buf = buf + bmp_sz(16);
+	bmp_init(b16, buf, 16, 16);
+
+	s = bmp_sz(35) + bmp_buf_sz(52, 35);
+	buf = _alloc(s);
+	b52 = (bmp_t *) buf;
+	buf = buf + bmp_sz(35);
+	bmp_init(b52, buf, 52, 16);
+
+	s = bmp_sz(8) + bmp_buf_sz(72, 8);
+	buf = _alloc(s);
+	b72 = (bmp_t *) buf;
+	buf = buf + bmp_sz(8);
+	bmp_init(b72, buf, 72, 8);
 
 	cnt = 0;
 	a00100008 = _malloc2(68);
@@ -418,34 +384,20 @@ int bench_mm2(void)
 	a0010d478 = _malloc2(40);
 	a0010d738 = _malloc2(7);
 	a0010dd40 = _malloc2(7);
-	_free2(a0010d4a8);
 	a0010d4a8 = _malloc2(8);
 	a0010e0f8 = _malloc2(8);
 	a0010e108 = _malloc2(8);
 	a0010e118 = _malloc2(40);
 	a0010e148 = _malloc2(40);
 	_free2(a0010e148);
-	_free2(a0010d998);
-	_free2(a0010d9c8);
-	_free2(a0010d890);
 	_free2(a0010dd40);
-	_free2(a0010da50);
-	_free2(a0010d748);
 	_free2(a0010e118);
-	_free2(a0010e0a8);
 	a0010da28 = _malloc2(46);
 	a0010e118 = _malloc2(47);
 	a0010e150 = _malloc2(40);
 	_free2(a0010e150);
 	_free2(a0010da28);
 	a0010e118 = _malloc2(40);
-	_free2(a0010da28);
-	_free2(a0010e148);
-	_free2(a0010e278);
-	_free2(a0010e368);
-	_free2(a0010e4a8);
-	_free2(a0010da38);
-	_free2(a0010da28);
 	a0010da28 = _malloc2(28);
 	a0010e0a8 = _malloc2(26);
 	a0010e148 = _malloc2(22);
@@ -466,7 +418,6 @@ int bench_mm2(void)
 	_free2(a0010e168);
 	_free2(a0010e198);
 	_free2(a0010e118);
-	_free2(a0010ddf8);
 	a0010e118 = _malloc2(40);
 	a0010e190 = _malloc2(40);
 	_free2(a0010e190);
@@ -474,9 +425,7 @@ int bench_mm2(void)
 	a0010e190 = _malloc2(40);
 	_free2(a0010dd40);
 	_free2(a0010e190);
-	_free2(a0010e168);
 	_free2(a0010e118);
-	_free2(a0010e168);
 	a0010e168 = _malloc2(121);
 	a0010dd40 = _malloc2(2);
 	a0010e1f0 = _malloc2(40);
@@ -510,14 +459,12 @@ int bench_mm2(void)
 	a0010e278 = _malloc2(40);
 	_free2(a0010e228);
 	_free2(a0010e278);
-	_free2(a0010e118);
 	a0010e118 = _malloc2(40);
 	_free2(a0010e118);
 	_free2(a0010e168);
 	a0010e168 = _malloc2(40);
 	a0010e198 = _malloc2(40);
 	_free2(a0010e168);
-	_free2(a0010e118);
 	a0010e118 = _malloc2(40);
 	_free2(a0010e198);
 	a0010e168 = _malloc2(100);
@@ -525,15 +472,12 @@ int bench_mm2(void)
 	_free2(a0010e168);
 	_free2(a0010e1d8);
 	_free2(a0010e118);
-	_free2(a0010ddf8);
 	a0010e118 = _malloc2(40);
 	_free2(a0010e118);
 	a0010e118 = _malloc2(40);
 	_free2(a0010e118);
-	_free2(a0010e0d0);
 	a0010e118 = _malloc2(40);
 	_free2(a0010e118);
-	_free2(a0010ddf8);
 	a0010e118 = _malloc2(40);
 	return cnt;
 }

@@ -171,8 +171,8 @@ static void bench_api(void *priv)
 	mut_init(&mut);
 	buf = core_alloc(4096, 2);
 	mq_init(&mq, 1, buf, 4096);
-	task_new("t1", t1, 10, 1024, -1, 0);
-	task_new("t2", t2, 11, 1024, -1, 0);
+	task_new("t1", t1, 10, 2024, -1, 0);
+	task_new("t2", t2, 11, 2024, -1, 0);
 }
 
 int main(void)
