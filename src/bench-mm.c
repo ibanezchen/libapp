@@ -149,6 +149,7 @@ int bench_mm(void)
 	a00105958 = _malloc(68);
 	a001059a8 = _malloc(4103);
 	a001069b8 = _malloc(68);
+	a00106a08 = _malloc(14583);
 	a0010ca18 = _malloc(68);
 	a0010ca68 = _malloc(2055);
 	a0010d278 = _malloc(12);
