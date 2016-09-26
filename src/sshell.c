@@ -107,6 +107,7 @@ void sh_uartw(void *priv, char *b, int n)
 #include <hcos/task.h>
 #include <stdio.h>
 #include "_soc.h"
+#include "uart.h"
 
 static int test(char *cmd)
 {
@@ -116,9 +117,12 @@ static int test(char *cmd)
 
 static cmd_t cmd_test = { "test", test, "" };
 
+static char buf[128];
+
 static void shell(void *priv)
 {
 	sshell_t s;
+	uart_int_in(&u0, buf, 128);
 	sh_init(&s, sh_uartr, sh_uartw, &u0);
 	sh_cmd_add(&s, &cmd_test);
 	while (1) {
