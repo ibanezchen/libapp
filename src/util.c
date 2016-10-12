@@ -20,8 +20,9 @@ static cmd_t cmd_test = { "test", test, "" };
 
 static int ut(char *cmd)
 {
-	printf("sys-idle %d %d %.2f%%\n", core_ut.idle, core_ut.all, 
-		((double)core_ut.idle*100)/core_ut.all);
+	unsigned idle = load_ut.idle;
+	unsigned all = load_ut.all;
+	printf("sys-idle %d %d %.2f%%\n", idle, all, ((double)idle*100)/all);
 	return 0;
 }
 
@@ -46,7 +47,7 @@ static void shell(void *priv)
 	sh_cmd_add(&s, &cmd_test);
 	sh_cmd_add(&s, &cmd_ut);
 	sh_cmd_add(&s, &cmd_busy);
-	core_ut_init(tmr_hz);
+	load_ut_init(tmr_hz);
 	while (1) {
 		char *cmd;
 		cmd = sh_gets(&s);
