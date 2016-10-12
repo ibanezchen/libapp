@@ -1,8 +1,10 @@
 #include <hcos/task.h>
 #include <jerryscript/jerry.h>
 #include "sshell.h"
-#include "_soc.h"
 #include <string.h>
+#include "uart.h"
+
+extern uart_t u0;
 
 jerry_completion_code_t code;
 

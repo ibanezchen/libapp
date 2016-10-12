@@ -13,7 +13,7 @@ MOPTS  :=$(COPTS) \
 	-fno-builtin -fno-common \
 	-ffunction-sections -fdata-sections -fshort-enums
 CONFIG = -DWIFI_SSID=$(WIFI_SSID) -DWIFI_PASSWD=$(WIFI_PASSWD) \
-	-DAWS_IOT_AP=$(AWS_IOT_AP)
+	-DAWS_IOT_AP=$(AWS_IOT_AP) -DBENCH_MM_BASE_TCM=0x100000
 ASFLAGS:=$(MOPTS) $(CONFIG) -O2 -g -Wall -Werror -D __ASSEMBLY__
 CFLAGS :=$(MOPTS) $(CONFIG) -O2 -g -Wall -Werror
 LSCRIPT?=rom.ld

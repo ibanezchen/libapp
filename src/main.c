@@ -32,7 +32,6 @@
 #include <lwip/sockets.h>
 #include <lwip/netdb.h>
 
-#include "_soc.h"
 #include "term.h"
 #include "plt.h"
 #include "plt-wifi.h"

@@ -26,32 +26,18 @@
 #include <hcos/soc.h>
 #include <hcos/io.h>
 #include <hcos/cpu/nvic.h>
-#include "_soc.h"
+#include <hcos/clk-cpu.h>
 
 #include <string.h>
 #include <stdio.h>
 
 #include "term.h"
-
-static volatile float g = 3.14;
-
-void fast(void *priv)
-{
-	unsigned ts = (unsigned)priv;
-	g = g + g;
-	task_sleep(10);
-	irq_sgi(12);
-	task_sleep(10);
-	while (1) {
-		_printf("fast %d\r\n", ts);
-		task_sleep(ts);
-	}
-}
-
-#include "clk-cpu.h"
 #include "sshell.h"
+#include "uart.h"
 
-void slow(void *priv)
+extern uart_t u0;
+
+void cpufreq(void *priv)
 {
 	unsigned ts = (unsigned)priv;
 	clk_t *clk = clk_cpu_init(0);
@@ -73,12 +59,6 @@ void slow(void *priv)
 
 }
 
-irq_handler(isr_use_float)
-{
-	g += 10.2;
-	return IRQ_DONE;
-}
-
 #if _EXE_
 int main(int argc, char **argv)
 {
@@ -87,8 +67,7 @@ int main(int argc, char **argv)
 	for (i = 0; i < argc; i++)
 		printf("argv[%d] = %s\r\n", i, argv[i]);
 	irq_init(12, isr_use_float);
-//      task_new("fast", fast, 56, 1024, -1, (void *)HZ);
-	task_new("slow", slow, 56, 4024, -1, (void *)(tmr_hz * 1));
+	task_new("cpufreq", cpufreq, 56, 4024, -1, (void *)(tmr_hz * 1));
 	core_start();
 	return 0;
 }

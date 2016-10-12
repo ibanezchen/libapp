@@ -24,7 +24,8 @@
 /*-****************************************************************************/
 #include <string.h>
 #include "plt.h"
-#include "_soc.h"
+
+#define BASE_TCM	BENCH_MM_BASE_TCM
 
 void *a00100008;
 void *a00100058;
