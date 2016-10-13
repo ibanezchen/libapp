@@ -34,39 +34,47 @@
 #include "term.h"
 #include "sshell.h"
 #include "uart.h"
+#include "plt.h"
+
+#define MEASURE		0
 
 extern uart_t u0;
 
 void cpufreq(void *priv)
 {
-	unsigned ts = (unsigned)priv;
-	clk_t *clk = clk_cpu_init(0);
 	int i;
-
+	unsigned ts = (unsigned)priv;
+	clk_t *clk;
 	sshell_t s;
+
+	plt_init();	
+	clk = clk_cpu_init(0);
 	sh_init(&s, sh_uartr, sh_uartw, &u0);
+#if MEASURE
 	irq_lock();
+#endif
 	while (1) {
 		for (i = 0; i < 9; i++) {
 			clk_setf(clk, i);
 			printf("%d clk = %d\n", i, clk_getf(clk));
 			task_sleep(ts);
-			printf("%s\n", sh_gets(&s));
+#if MEASURE
+			printf("press\n");
+			sh_gets(&s)
+#endif
 		}
+#if MEASURE
 		printf("wfi\n");
 		__asm__ volatile ("wfi");
+#endif
 	}
-
 }
 
 #if _EXE_
-int main(int argc, char **argv)
+
+int main(void)
 {
-	int i;
 	core_init();
-	for (i = 0; i < argc; i++)
-		printf("argv[%d] = %s\r\n", i, argv[i]);
-	irq_init(12, isr_use_float);
 	task_new("cpufreq", cpufreq, 56, 4024, -1, (void *)(tmr_hz * 1));
 	core_start();
 	return 0;
